@@ -70,9 +70,9 @@
                     </li>
                 </ul>
                 
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-3 navbar-nav-right">
                     @guest
-                        <a href="{{ route('become-tasker') }}" class="nav-link d-none d-lg-inline-block">Become a Tasker</a>
+                        <a href="{{ route('become-tasker') }}" class="become-tasker-link d-none d-lg-block">Become a Tasker</a>
                         <a href="{{ route('login') }}" class="btn btn-nav-login">Log In</a>
                         <a href="{{ route('register') }}" class="btn btn-nav-signup">Sign Up</a>
                     @else
@@ -144,7 +144,7 @@
     <!-- Main Content -->
     <main>
         @if(session('success'))
-            <div class="container mt-3">
+            <div class="container mt-3" style="padding-top: 80px;">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -153,7 +153,7 @@
         @endif
         
         @if(session('error'))
-            <div class="container mt-3">
+            <div class="container mt-3" style="padding-top: 80px;">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>

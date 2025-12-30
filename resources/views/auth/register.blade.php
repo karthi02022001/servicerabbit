@@ -3,9 +3,12 @@
 @section('title', 'Sign Up')
 
 @section('content')
-<div class="auth-card fade-in">
+<div class="auth-card">
     <div class="auth-header">
-        <h2 class="mb-1">Create Account</h2>
+        <div class="auth-header-icon">
+            <i class="bi bi-person-plus"></i>
+        </div>
+        <h2>Create Account</h2>
         <p>Join thousands of happy customers</p>
     </div>
 
@@ -13,47 +16,53 @@
         @if($errors->any())
             <div class="alert alert-danger mb-4">
                 <i class="bi bi-exclamation-triangle me-2"></i>
-                <ul class="mb-0 ps-3">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+                {{ $errors->first() }}
             </div>
         @endif
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <div class="row g-3 mb-3">
+            <div class="row g-3 mb-4">
                 <div class="col-6">
                     <label for="first_name" class="form-label">First Name</label>
-                    <input type="text" 
-                           class="form-control @error('first_name') is-invalid @enderror" 
-                           id="first_name" 
-                           name="first_name" 
-                           value="{{ old('first_name') }}" 
-                           placeholder="John"
-                           required>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" 
+                               class="form-control @error('first_name') is-invalid @enderror" 
+                               id="first_name" 
+                               name="first_name" 
+                               value="{{ old('first_name') }}" 
+                               placeholder="John"
+                               required>
+                    </div>
                     @error('first_name')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-6">
                     <label for="last_name" class="form-label">Last Name</label>
-                    <input type="text" 
-                           class="form-control @error('last_name') is-invalid @enderror" 
-                           id="last_name" 
-                           name="last_name" 
-                           value="{{ old('last_name') }}" 
-                           placeholder="Doe"
-                           required>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" 
+                               class="form-control @error('last_name') is-invalid @enderror" 
+                               id="last_name" 
+                               name="last_name" 
+                               value="{{ old('last_name') }}" 
+                               placeholder="Doe"
+                               required>
+                    </div>
                     @error('last_name')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-4">
                 <label for="email" class="form-label">Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text">
@@ -72,8 +81,8 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number <span class="text-muted">(Optional)</span></label>
+            <div class="mb-4">
+                <label for="phone" class="form-label">Phone Number <small class="text-muted">(Optional)</small></label>
                 <div class="input-group">
                     <span class="input-group-text">
                         <i class="bi bi-phone"></i>
@@ -90,7 +99,7 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
+            <div class="mb-4">
                 <label for="password" class="form-label">Password</label>
                 <div class="input-group">
                     <span class="input-group-text">
@@ -101,16 +110,12 @@
                            id="password" 
                            name="password" 
                            placeholder="Create a strong password"
-                           required
-                           onkeyup="checkPasswordStrength()">
-                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password', 'toggleIcon1')">
+                           required>
+                    <button class="btn" type="button" onclick="togglePassword('password', 'toggleIcon1')">
                         <i class="bi bi-eye" id="toggleIcon1"></i>
                     </button>
                 </div>
-                <div class="password-strength mt-2">
-                    <div class="password-strength-bar" id="strengthBar"></div>
-                </div>
-                <small class="form-text" id="strengthText">Password must be at least 8 characters</small>
+                <small class="text-muted">Must be at least 8 characters</small>
                 @error('password')
                     <div class="invalid-feedback d-block">{{ $message }}</div>
                 @enderror
@@ -128,7 +133,7 @@
                            name="password_confirmation" 
                            placeholder="Confirm your password"
                            required>
-                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password_confirmation', 'toggleIcon2')">
+                    <button class="btn" type="button" onclick="togglePassword('password_confirmation', 'toggleIcon2')">
                         <i class="bi bi-eye" id="toggleIcon2"></i>
                     </button>
                 </div>
@@ -137,10 +142,10 @@
             <div class="form-check mb-4">
                 <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox" name="terms" id="terms" required>
                 <label class="form-check-label" for="terms">
-                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                    I agree to the <a href="#" class="forgot-link">Terms of Service</a> and <a href="#" class="forgot-link">Privacy Policy</a>
                 </label>
                 @error('terms')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                    <div class="invalid-feedback d-block">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -153,7 +158,7 @@
             <span>or sign up with</span>
         </div>
 
-        <div class="row g-2">
+        <div class="row g-3">
             <div class="col-6">
                 <button type="button" class="social-login-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -167,7 +172,7 @@
             </div>
             <div class="col-6">
                 <button type="button" class="social-login-btn">
-                    <i class="bi bi-facebook text-primary fs-5"></i>
+                    <i class="bi bi-facebook" style="color: #1877f2; font-size: 1.25rem;"></i>
                     Facebook
                 </button>
             </div>
@@ -177,7 +182,7 @@
     <div class="auth-footer">
         <p class="mb-0">
             Already have an account? 
-            <a href="{{ route('login') }}" class="fw-semibold text-primary">Log in</a>
+            <a href="{{ route('login') }}">Log in</a>
         </p>
     </div>
 </div>
@@ -197,44 +202,6 @@ function togglePassword(inputId, iconId) {
         passwordInput.type = 'password';
         toggleIcon.classList.remove('bi-eye-slash');
         toggleIcon.classList.add('bi-eye');
-    }
-}
-
-function checkPasswordStrength() {
-    const password = document.getElementById('password').value;
-    const strengthBar = document.getElementById('strengthBar');
-    const strengthText = document.getElementById('strengthText');
-    
-    let strength = 0;
-    
-    if (password.length >= 8) strength++;
-    if (password.match(/[a-z]+/)) strength++;
-    if (password.match(/[A-Z]+/)) strength++;
-    if (password.match(/[0-9]+/)) strength++;
-    if (password.match(/[^a-zA-Z0-9]+/)) strength++;
-    
-    strengthBar.className = 'password-strength-bar';
-    
-    if (password.length === 0) {
-        strengthBar.style.width = '0';
-        strengthText.textContent = 'Password must be at least 8 characters';
-        strengthText.className = 'form-text';
-    } else if (strength <= 2) {
-        strengthBar.classList.add('weak');
-        strengthText.textContent = 'Weak password';
-        strengthText.className = 'form-text text-danger';
-    } else if (strength === 3) {
-        strengthBar.classList.add('fair');
-        strengthText.textContent = 'Fair password';
-        strengthText.className = 'form-text text-warning';
-    } else if (strength === 4) {
-        strengthBar.classList.add('good');
-        strengthText.textContent = 'Good password';
-        strengthText.className = 'form-text text-info';
-    } else {
-        strengthBar.classList.add('strong');
-        strengthText.textContent = 'Strong password';
-        strengthText.className = 'form-text text-success';
     }
 }
 </script>

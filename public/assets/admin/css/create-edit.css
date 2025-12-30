@@ -1,0 +1,603 @@
+/*
+|--------------------------------------------------------------------------
+| Service Rabbit - Create & Edit Pages Stylesheet
+| File: public/assets/admin/css/create_edit.css
+|--------------------------------------------------------------------------
+*/
+
+/* ============================================
+   Form Container
+   ============================================ */
+.form-container {
+    max-width: 900px;
+}
+
+.form-container-sm {
+    max-width: 600px;
+}
+
+.form-container-lg {
+    max-width: 1100px;
+}
+
+/* ============================================
+   Form Card
+   ============================================ */
+.form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+}
+
+.form-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-card-title i {
+    color: var(--primary);
+}
+
+.form-card-body {
+    padding: 1.5rem;
+}
+
+/* ============================================
+   Form Sections
+   ============================================ */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.form-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section-title i {
+    color: var(--primary);
+}
+
+/* ============================================
+   Form Group Enhanced
+   ============================================ */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-label-required::after {
+    content: '*';
+    color: var(--danger);
+    margin-left: 0.25rem;
+}
+
+/* Input with Icon */
+.input-icon-wrapper {
+    position: relative;
+}
+
+.input-icon-wrapper .form-control {
+    padding-left: 2.75rem;
+}
+
+.input-icon-wrapper .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.input-icon-wrapper .input-icon-right {
+    left: auto;
+    right: 1rem;
+}
+
+.input-icon-wrapper .form-control.has-icon-right {
+    padding-left: 1rem;
+    padding-right: 2.75rem;
+}
+
+/* ============================================
+   Permission Groups (RBAC)
+   ============================================ */
+.permission-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.permission-group {
+    background: var(--hover-bg);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    border: 1px solid var(--border-color);
+}
+
+.permission-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.permission-group-header h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.permission-group-header h6 i {
+    color: var(--primary);
+}
+
+.permission-group-header .toggle-link {
+    font-size: 0.75rem;
+    color: var(--primary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-weight: 500;
+}
+
+.permission-group-header .toggle-link:hover {
+    text-decoration: underline;
+}
+
+.permission-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.permission-list .form-check {
+    margin: 0;
+    padding-left: 1.75rem;
+}
+
+.permission-list .form-check-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.permission-list .form-check-label small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: 0.15rem;
+}
+
+/* ============================================
+   Role Selection Cards
+   ============================================ */
+.role-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.role-card {
+    background: var(--hover-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.role-card:hover {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.role-card.selected {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.role-card .form-check-input {
+    display: none;
+}
+
+.role-card-content {
+    text-align: center;
+}
+
+.role-card-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 0.75rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.role-card-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.role-card-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   Toggle Switch Enhanced
+   ============================================ */
+.toggle-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--hover-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 0.75rem;
+}
+
+.toggle-item:last-child {
+    margin-bottom: 0;
+}
+
+.toggle-item .form-switch {
+    margin: 0;
+    padding: 0;
+}
+
+.toggle-item .form-switch .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+    margin: 0;
+}
+
+.toggle-content {
+    flex-grow: 1;
+}
+
+.toggle-content strong {
+    display: block;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.toggle-content small {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* ============================================
+   File Upload
+   ============================================ */
+.file-upload-wrapper {
+    position: relative;
+}
+
+.file-upload-preview {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.file-upload-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--border-color);
+}
+
+.file-upload-preview .preview-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--border-radius);
+    background: var(--hover-bg);
+    border: 2px dashed var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 2.5rem;
+}
+
+.file-drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem;
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+    background: var(--hover-bg);
+}
+
+.file-drop-zone:hover,
+.file-drop-zone.dragover {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.file-drop-zone i {
+    font-size: 3rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.file-drop-zone h6 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.file-drop-zone p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+.file-drop-zone .btn {
+    margin-top: 1rem;
+}
+
+/* ============================================
+   Password Toggle
+   ============================================ */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .form-control {
+    padding-right: 3rem;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.1rem;
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary);
+}
+
+/* ============================================
+   Form Actions
+   ============================================ */
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.form-actions-sticky {
+    position: sticky;
+    bottom: 0;
+    background: var(--card-bg);
+    margin: 0 -1.5rem -1.5rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   Help Sidebar
+   ============================================ */
+.help-sidebar {
+    position: sticky;
+    top: calc(var(--topbar-height) + 1.5rem);
+}
+
+.help-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+}
+
+.help-card-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 1rem 1.25rem;
+}
+
+.help-card-header h6 {
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.help-card-body {
+    padding: 1.25rem;
+}
+
+.help-card-body h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.help-card-body p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.help-card-body ul {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.help-card-body ul li {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+/* ============================================
+   Danger Zone
+   ============================================ */
+.danger-zone {
+    border: 2px solid var(--danger);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+.danger-zone-header {
+    background: var(--danger-light);
+    color: var(--danger);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.danger-zone-body {
+    padding: 1.25rem;
+}
+
+.danger-zone-body p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   Validation States
+   ============================================ */
+.form-control.is-valid,
+.form-select.is-valid {
+    border-color: var(--success);
+}
+
+.form-control.is-valid:focus,
+.form-select.is-valid:focus {
+    border-color: var(--success);
+    box-shadow: 0 0 0 3px rgba(var(--success-rgb), 0.1);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--danger);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(var(--danger-rgb), 0.1);
+}
+
+.valid-feedback {
+    color: var(--success);
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+}
+
+.invalid-feedback {
+    color: var(--danger);
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+}
+
+/* ============================================
+   Character Counter
+   ============================================ */
+.char-counter {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 0.35rem;
+}
+
+.char-counter.warning {
+    color: var(--warning);
+}
+
+.char-counter.danger {
+    color: var(--danger);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 991.98px) {
+    .help-sidebar {
+        position: static;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .permission-groups {
+        grid-template-columns: 1fr;
+    }
+
+    .role-cards {
+        grid-template-columns: 1fr;
+    }
+}

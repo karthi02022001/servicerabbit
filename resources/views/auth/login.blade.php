@@ -3,9 +3,12 @@
 @section('title', 'Log In')
 
 @section('content')
-<div class="auth-card fade-in">
+<div class="auth-card">
     <div class="auth-header">
-        <h2 class="mb-1">Welcome Back!</h2>
+        <div class="auth-header-icon">
+            <i class="bi bi-box-arrow-in-right"></i>
+        </div>
+        <h2>Welcome Back!</h2>
         <p>Log in to your Service Rabbit account</p>
     </div>
 
@@ -14,6 +17,13 @@
             <div class="alert alert-danger mb-4">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 {{ $errors->first() }}
+            </div>
+        @endif
+
+        @if(session('status'))
+            <div class="alert alert-success mb-4">
+                <i class="bi bi-check-circle me-2"></i>
+                {{ session('status') }}
             </div>
         @endif
 
@@ -43,7 +53,7 @@
             <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <label for="password" class="form-label mb-0">Password</label>
-                    <a href="{{ route('password.request') }}" class="small text-primary">Forgot Password?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-link">Forgot Password?</a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-text">
@@ -55,7 +65,7 @@
                            name="password" 
                            placeholder="Enter your password"
                            required>
-                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                    <button class="btn" type="button" onclick="togglePassword()">
                         <i class="bi bi-eye" id="toggleIcon"></i>
                     </button>
                 </div>
@@ -67,7 +77,7 @@
             <div class="form-check mb-4">
                 <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                 <label class="form-check-label" for="remember">
-                    Remember me
+                    Remember me for 30 days
                 </label>
             </div>
 
@@ -80,7 +90,7 @@
             <span>or continue with</span>
         </div>
 
-        <div class="row g-2">
+        <div class="row g-3">
             <div class="col-6">
                 <button type="button" class="social-login-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -94,7 +104,7 @@
             </div>
             <div class="col-6">
                 <button type="button" class="social-login-btn">
-                    <i class="bi bi-facebook text-primary fs-5"></i>
+                    <i class="bi bi-facebook" style="color: #1877f2; font-size: 1.25rem;"></i>
                     Facebook
                 </button>
             </div>
@@ -104,7 +114,7 @@
     <div class="auth-footer">
         <p class="mb-0">
             Don't have an account? 
-            <a href="{{ route('register') }}" class="fw-semibold text-primary">Sign up for free</a>
+            <a href="{{ route('register') }}">Sign up for free</a>
         </p>
     </div>
 </div>

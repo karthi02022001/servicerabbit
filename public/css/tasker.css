@@ -1,0 +1,790 @@
+/*
+|--------------------------------------------------------------------------
+| Service Rabbit - Tasker Dashboard Styles
+|--------------------------------------------------------------------------
+| CSS for Tasker Dashboard, Profile, Services, and Availability pages
+| Add this to your public/css/tasker.css
+*/
+
+/* ============================================
+   LAYOUT & BASE
+   ============================================ */
+
+.tasker-dashboard,
+.tasker-services,
+.tasker-service-form,
+.tasker-availability,
+.tasker-profile-edit,
+.tasker-earnings,
+.tasker-verification {
+    background: #f8f9fa;
+    min-height: calc(100vh - 80px);
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 0.25rem;
+}
+
+.page-header p {
+    margin-bottom: 0;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+.tasker-sidebar {
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.sidebar-profile {
+    text-align: center;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1.25rem;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+}
+
+.profile-avatar img,
+.profile-avatar .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF6B35, #e55a2b);
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid white;
+}
+
+.status-indicator.available {
+    background: #10b981;
+}
+
+.status-indicator.unavailable {
+    background: #9ca3af;
+}
+
+.profile-info h5 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #1A1A2E;
+}
+
+.profile-headline {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.profile-rating {
+    font-size: 0.9rem;
+}
+
+/* Availability Toggle */
+.availability-toggle {
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+}
+
+.availability-toggle .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+}
+
+.availability-toggle .form-check-input:checked {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+.availability-toggle .form-check-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav .nav-section {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    font-weight: 600;
+    padding: 1rem 0.75rem 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    color: #4b5563;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.sidebar-nav .nav-link:hover {
+    background: #f3f4f6;
+    color: #1A1A2E;
+}
+
+.sidebar-nav .nav-link.active {
+    background: linear-gradient(135deg, #FF6B35, #e55a2b);
+    color: white;
+}
+
+.sidebar-nav .nav-link i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-nav .nav-link .badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+}
+
+.sidebar-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.dashboard-card,
+.profile-card,
+.services-card,
+.availability-card,
+.earnings-card,
+.checklist-card,
+.documents-card,
+.trust-card,
+.status-card,
+.form-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.card-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.card-header-custom h5 {
+    font-weight: 600;
+    color: #1A1A2E;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.card-body-custom {
+    padding: 1.25rem;
+}
+
+.view-all {
+    font-size: 0.85rem;
+    color: #FF6B35;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.view-all:hover {
+    color: #e55a2b;
+}
+
+/* ============================================
+   STAT CARDS
+   ============================================ */
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.stat-icon.today { background: #dbeafe; color: #2563eb; }
+.stat-icon.earnings { background: #d1fae5; color: #059669; }
+.stat-icon.rating { background: #fef3c7; color: #d97706; }
+.stat-icon.completed { background: #ede9fe; color: #7c3aed; }
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1A1A2E;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* ============================================
+   BOOKING ITEMS
+   ============================================ */
+
+.booking-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    transition: background 0.2s;
+}
+
+.booking-item:last-child {
+    margin-bottom: 0;
+}
+
+.booking-item:hover {
+    background: #f9fafb;
+}
+
+.booking-item.pending {
+    border-left: 3px solid #f59e0b;
+}
+
+.booking-avatar img,
+.avatar-placeholder-sm {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder-sm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF6B35, #e55a2b);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.booking-date {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #FF6B35, #e55a2b);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.booking-date .day {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.booking-date .month {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.booking-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.booking-info h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #1A1A2E;
+}
+
+.booking-info p {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.booking-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.booking-meta i {
+    margin-right: 0.25rem;
+}
+
+.booking-actions {
+    text-align: right;
+}
+
+.booking-actions .price {
+    display: block;
+    font-weight: 700;
+    color: #10b981;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state,
+.empty-state-card {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #9ca3af;
+}
+
+.empty-state i,
+.empty-state-card .empty-icon i {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #FF6B35, #e55a2b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-icon i {
+    font-size: 3rem;
+    color: white;
+    margin-bottom: 0;
+}
+
+.empty-state-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.empty-state-card h4 {
+    font-weight: 600;
+    color: #1A1A2E;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-card p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   FORM SECTIONS
+   ============================================ */
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.form-section h5 {
+    font-weight: 600;
+    color: #1A1A2E;
+    margin-bottom: 1.25rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* ============================================
+   PRICING OPTIONS
+   ============================================ */
+
+.pricing-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.pricing-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.pricing-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.pricing-option .option-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.pricing-option input:checked + .option-content {
+    border-color: #FF6B35;
+    background: #fff5f0;
+}
+
+.pricing-option .option-content i {
+    font-size: 1.5rem;
+    color: #6b7280;
+}
+
+.pricing-option input:checked + .option-content i {
+    color: #FF6B35;
+}
+
+.pricing-option .option-title {
+    font-weight: 600;
+    color: #1A1A2E;
+}
+
+.pricing-option .option-desc {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* ============================================
+   SCHEDULE LIST
+   ============================================ */
+
+.schedule-list {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.schedule-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    transition: background 0.2s;
+}
+
+.schedule-row:last-child {
+    border-bottom: none;
+}
+
+.schedule-row:hover {
+    background: #f9fafb;
+}
+
+.day-toggle {
+    min-width: 140px;
+}
+
+.day-toggle .form-check-label {
+    font-weight: 600;
+    color: #1A1A2E;
+}
+
+.day-times {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.day-times.disabled {
+    opacity: 0.5;
+}
+
+.day-times input {
+    width: 110px;
+}
+
+.day-times .separator {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   BLOCKED DATES
+   ============================================ */
+
+.blocked-dates-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.blocked-date-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.blocked-date-item:last-child {
+    border-bottom: none;
+}
+
+.date-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.date-badge {
+    width: 50px;
+    height: 50px;
+    background: #fee2e2;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-badge .day {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #dc2626;
+    line-height: 1;
+}
+
+.date-badge .month {
+    font-size: 0.7rem;
+    color: #dc2626;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   WALLET CARDS
+   ============================================ */
+
+.wallet-card {
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.wallet-card.available {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.wallet-card.pending {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.wallet-card.total {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.wallet-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.wallet-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.wallet-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* ============================================
+   FORM SWITCHES
+   ============================================ */
+
+.form-switch .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #FF6B35;
+    border-color: #FF6B35;
+}
+
+/* ============================================
+   TIPS CARD
+   ============================================ */
+
+.tips-card {
+    background: #eff6ff;
+    border-radius: 12px;
+    padding: 1.25rem;
+}
+
+.tips-card h6 {
+    color: #1e40af;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.tips-card ul {
+    padding-left: 1.25rem;
+    color: #1e40af;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.tips-card li {
+    margin-bottom: 0.25rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 991.98px) {
+    .tasker-sidebar {
+        position: relative;
+        top: 0;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .booking-item {
+        flex-wrap: wrap;
+    }
+    
+    .booking-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+    }
+    
+    .pricing-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .schedule-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .day-times {
+        width: 100%;
+    }
+    
+    .day-times input {
+        flex: 1;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}

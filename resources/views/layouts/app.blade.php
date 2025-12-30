@@ -19,7 +19,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <!-- In layouts/app.blade.php (for dashboard pages) -->
+<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     
     @stack('styles')
 </head>
@@ -144,7 +146,7 @@
     <!-- Main Content -->
     <main>
         @if(session('success'))
-            <div class="container mt-3" style="padding-top: 80px;">
+            <div class="container mt-3" style="">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -153,7 +155,7 @@
         @endif
         
         @if(session('error'))
-            <div class="container mt-3" style="padding-top: 80px;">
+            <div class="container mt-3" style="">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>

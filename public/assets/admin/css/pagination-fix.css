@@ -1,0 +1,126 @@
+/* =====================================================
+   PAGINATION FIX - Add this to your index.css
+   ===================================================== */
+
+/* Data Card Footer - Pagination Area */
+.data-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    background: var(--card-bg, #fff);
+    border-radius: 0 0 16px 16px;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pagination-info {
+    font-size: 0.875rem;
+    color: var(--text-muted, #6b7280);
+}
+
+.pagination-info strong {
+    color: var(--text-color, #1f2937);
+    font-weight: 600;
+}
+
+/* Custom Pagination Nav */
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pagination-nav .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color, #374151);
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.pagination-nav .page-link:hover:not(.disabled):not(.active) {
+    background: var(--hover-bg, #f3f4f6);
+    border-color: var(--primary, #FF6B35);
+    color: var(--primary, #FF6B35);
+}
+
+.pagination-nav .page-link.active {
+    background: linear-gradient(135deg, var(--primary, #FF6B35), var(--primary-dark, #e55a2b));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.pagination-nav .page-link.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pagination-nav .page-link i {
+    font-size: 0.75rem;
+}
+
+/* Responsive Pagination */
+@media (max-width: 576px) {
+    .data-card-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pagination-nav .page-link {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Override Bootstrap Pagination (if used) */
+.pagination {
+    margin: 0;
+    gap: 0.25rem;
+}
+
+.pagination .page-item .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color, #374151);
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 8px !important;
+    margin: 0;
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    border-radius: 8px !important;
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, var(--primary, #FF6B35), var(--primary-dark, #e55a2b));
+    border-color: transparent;
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    background: var(--card-bg, #fff);
+}

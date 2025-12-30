@@ -5,51 +5,29 @@ namespace App\Http\Controllers\Tasker;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Review;
-use App\Models\Transaction;
+use App\Models\Service;
+use App\Models\TaskerProfile;
+use App\Models\Wallet;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     /**
-     * Show the tasker dashboard.
+     * Display the tasker dashboard.
      */
-    public function index(): View
+    public function index()
     {
         $user = Auth::user();
-        $taskerProfile = $user->taskerProfile;
+        $profile = $user->taskerProfile;
 
-        // Get tasker statistics
-        $stats = [
-            'todays_bookings' => Booking::where('tasker_id', $user->id)
-                ->whereDate('booking_date', now()->toDateString())
-                ->count(),
-            'pending_requests' => Booking::where('tasker_id', $user->id)
-                ->where('status', 'pending')
-                ->count(),
-            'completed_tasks' => Booking::where('tasker_id', $user->id)
-                ->where('status', 'completed')
-                ->count(),
-            'monthly_earnings' => Transaction::where('tasker_id', $user->id)
-                ->where('type', 'earning')
-                ->where('status', 'completed')
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->sum('amount'),
-        ];
+        // Get dashboard stats
+        $stats = $this->getDashboardStats($user, $profile);
 
-        // Performance metrics
-        $performance = [
-            'rating' => $taskerProfile->average_rating ?? 0,
-            'total_reviews' => $taskerProfile->total_reviews ?? 0,
-            'completion_rate' => $this->calculateCompletionRate($user->id),
-            'response_time' => $this->calculateAverageResponseTime($user->id),
-        ];
-
-        // Get pending bookings
-        $pendingBookings = Booking::where('tasker_id', $user->id)
-            ->where('status', 'pending')
-            ->with(['user', 'category', 'service'])
+        // Get recent bookings
+        $recentBookings = Booking::where('tasker_id', $user->id)
+            ->with(['user', 'service', 'category'])
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
@@ -58,58 +36,136 @@ class DashboardController extends Controller
         $upcomingBookings = Booking::where('tasker_id', $user->id)
             ->whereIn('status', ['accepted', 'paid'])
             ->where('booking_date', '>=', now()->toDateString())
-            ->with(['user', 'category', 'service'])
+            ->with(['user', 'service', 'category'])
             ->orderBy('booking_date')
             ->orderBy('start_time')
+            ->take(5)
+            ->get();
+
+        // Get pending booking requests
+        $pendingRequests = Booking::where('tasker_id', $user->id)
+            ->where('status', 'pending')
+            ->with(['user', 'service', 'category'])
+            ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
         // Get recent reviews
         $recentReviews = Review::where('reviewee_id', $user->id)
             ->where('status', 'approved')
-            ->with('reviewer')
+            ->with(['reviewer', 'booking'])
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->get();
 
+        // Get wallet info
+        $wallet = $user->wallet;
+
+        // Get earnings chart data (last 7 days)
+        $earningsChart = $this->getEarningsChartData($user);
+
         return view('tasker.dashboard.index', compact(
             'user',
-            'taskerProfile',
+            'profile',
             'stats',
-            'performance',
-            'pendingBookings',
+            'recentBookings',
             'upcomingBookings',
-            'recentReviews'
+            'pendingRequests',
+            'recentReviews',
+            'wallet',
+            'earningsChart'
         ));
     }
 
     /**
-     * Calculate tasker's completion rate.
+     * Get dashboard statistics.
      */
-    private function calculateCompletionRate(int $taskerId): float
+    private function getDashboardStats($user, $profile): array
     {
-        $totalBookings = Booking::where('tasker_id', $taskerId)
-            ->whereIn('status', ['completed', 'cancelled', 'declined'])
+        // Today's bookings
+        $todayBookings = Booking::where('tasker_id', $user->id)
+            ->whereDate('booking_date', today())
+            ->whereIn('status', ['accepted', 'paid', 'in_progress'])
             ->count();
 
-        if ($totalBookings === 0) {
-            return 100;
-        }
+        // Pending requests
+        $pendingCount = Booking::where('tasker_id', $user->id)
+            ->where('status', 'pending')
+            ->count();
 
-        $completedBookings = Booking::where('tasker_id', $taskerId)
+        // This month's earnings
+        $monthlyEarnings = Booking::where('tasker_id', $user->id)
+            ->where('status', 'completed')
+            ->whereMonth('completed_at', now()->month)
+            ->whereYear('completed_at', now()->year)
+            ->sum('tasker_payout');
+
+        // Total earnings
+        $totalEarnings = Booking::where('tasker_id', $user->id)
+            ->where('status', 'completed')
+            ->sum('tasker_payout');
+
+        // Completed tasks
+        $completedTasks = Booking::where('tasker_id', $user->id)
             ->where('status', 'completed')
             ->count();
 
-        return round(($completedBookings / $totalBookings) * 100, 1);
+        // Active services
+        $activeServices = Service::where('tasker_profile_id', $profile->id)
+            ->where('is_active', true)
+            ->count();
+
+        // Response rate (accepted + declined / total requests in last 30 days)
+        $last30DaysRequests = Booking::where('tasker_id', $user->id)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->count();
+
+        $respondedRequests = Booking::where('tasker_id', $user->id)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->whereIn('status', ['accepted', 'declined', 'paid', 'completed', 'in_progress'])
+            ->count();
+
+        $responseRate = $last30DaysRequests > 0 
+            ? round(($respondedRequests / $last30DaysRequests) * 100) 
+            : 100;
+
+        return [
+            'today_bookings' => $todayBookings,
+            'pending_requests' => $pendingCount,
+            'monthly_earnings' => $monthlyEarnings,
+            'total_earnings' => $totalEarnings,
+            'completed_tasks' => $completedTasks,
+            'active_services' => $activeServices,
+            'average_rating' => $profile->average_rating,
+            'total_reviews' => $profile->total_reviews,
+            'response_rate' => $responseRate,
+            'completion_rate' => $profile->completion_rate,
+        ];
     }
 
     /**
-     * Calculate average response time in hours.
+     * Get earnings chart data for last 7 days.
      */
-    private function calculateAverageResponseTime(int $taskerId): string
+    private function getEarningsChartData($user): array
     {
-        // This would typically be calculated from booking status history
-        // For now, return a placeholder
-        return '< 1 hour';
+        $labels = [];
+        $data = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $labels[] = $date->format('M d');
+
+            $dayEarnings = Booking::where('tasker_id', $user->id)
+                ->where('status', 'completed')
+                ->whereDate('completed_at', $date)
+                ->sum('tasker_payout');
+
+            $data[] = (float) $dayEarnings;
+        }
+
+        return [
+            'labels' => $labels,
+            'data' => $data,
+        ];
     }
 }

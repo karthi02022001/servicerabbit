@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OTPMail;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -49,6 +50,15 @@ class AuthController extends Controller
                 return back()->withErrors([
                     'email' => 'Your account has been deactivated. Please contact support.',
                 ])->withInput($request->only('email'));
+            }
+
+            // Check if email is verified
+            if (!$user->email_verified_at) {
+                // Generate new OTP and send
+                $this->generateAndSendOTP($user);
+
+                return redirect()->route('otp.verify')
+                    ->with('info', 'Please verify your email. A new OTP has been sent.');
             }
 
             // Update last login info
@@ -101,6 +111,9 @@ class AuthController extends Controller
             'terms.accepted' => 'You must accept the terms and conditions.',
         ]);
 
+        // Generate 6-digit OTP
+        $otp = $this->generateOTP();
+
         $user = User::create([
             'uuid' => Str::uuid(),
             'first_name' => $validated['first_name'],
@@ -110,68 +123,143 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'is_tasker' => false,
             'is_active' => true,
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        event(new Registered($user));
-
+        // Login the user
         Auth::login($user);
 
-        // Update last login info
+        // Send OTP email
+        $emailSent = $this->sendOTPEmail($user, $otp);
+
+        if ($emailSent) {
+            return redirect()->route('otp.verify')
+                ->with('success', 'Registration successful! Please check your email for the OTP code.');
+        } else {
+            return redirect()->route('otp.verify')
+                ->with('warning', 'Registration successful! OTP: ' . $otp . ' (Email sending failed - showing for testing)');
+        }
+    }
+
+    /**
+     * Show OTP verification form.
+     */
+    public function showOTPForm(): View
+    {
+        return view('auth.verify-otp');
+    }
+
+    /**
+     * Verify OTP.
+     */
+    public function verifyOTP(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'otp' => ['required', 'string', 'size:6'],
+        ]);
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Please login first.']);
+        }
+
+        // Check if OTP is correct
+        if ($user->otp !== $request->otp) {
+            return back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
+        }
+
+        // Check if OTP is expired
+        if ($user->otp_expires_at && now()->isAfter($user->otp_expires_at)) {
+            return back()->withErrors(['otp' => 'OTP has expired. Please request a new one.']);
+        }
+
+        // Mark email as verified
+        $user->update([
+            'email_verified_at' => now(),
+            'otp' => null,
+            'otp_expires_at' => null,
+        ]);
+
+        // Update last login
         $user->updateLastLogin($request->ip());
 
-        return redirect()->route('verification.notice')
-            ->with('success', 'Welcome to Service Rabbit! Please verify your email address.');
+        return redirect()->route('user.dashboard')
+            ->with('success', 'Email verified successfully! Welcome to Service Rabbit.');
     }
 
     /**
-     * Show email verification notice.
+     * Resend OTP.
      */
-    public function showVerificationNotice(Request $request): View|RedirectResponse
+    public function resendOTP(Request $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('user.dashboard');
-        }
+        $user = Auth::user();
 
-        return view('auth.verify-email');
-    }
-
-    /**
-     * Handle email verification.
-     */
-    public function verifyEmail(Request $request, $id, $hash): RedirectResponse
-    {
-        $user = User::findOrFail($id);
-
-        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        if (!$user) {
             return redirect()->route('login')
-                ->withErrors(['email' => 'Invalid verification link.']);
+                ->withErrors(['email' => 'Please login first.']);
         }
 
-        if ($user->hasVerifiedEmail()) {
+        if ($user->email_verified_at) {
             return redirect()->route('user.dashboard')
                 ->with('info', 'Your email is already verified.');
         }
 
-        if ($user->markEmailAsVerified()) {
-            event(new Verified($user));
-        }
+        // Generate new OTP
+        $otp = $this->generateOTP();
 
-        return redirect()->route('user.dashboard')
-            ->with('success', 'Your email has been verified!');
+        $user->update([
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
+        ]);
+
+        $emailSent = $this->sendOTPEmail($user, $otp);
+
+        if ($emailSent) {
+            return back()->with('success', 'A new OTP has been sent to your email.');
+        } else {
+            return back()->with('warning', 'New OTP: ' . $otp . ' (Email sending failed - showing for testing)');
+        }
     }
 
     /**
-     * Resend verification email.
+     * Generate OTP.
      */
-    public function resendVerificationEmail(Request $request): RedirectResponse
+    private function generateOTP(): string
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('user.dashboard');
+        return str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Generate and send OTP to user.
+     */
+    private function generateAndSendOTP(User $user): bool
+    {
+        $otp = $this->generateOTP();
+
+        $user->update([
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
+        ]);
+
+        return $this->sendOTPEmail($user, $otp);
+    }
+
+    /**
+     * Send OTP email.
+     */
+    private function sendOTPEmail(User $user, string $otp): bool
+    {
+        try {
+            Mail::to($user->email)->send(new OTPMail($user, $otp));
+            Log::info('OTP email sent successfully to: ' . $user->email);
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send OTP email to ' . $user->email . ': ' . $e->getMessage());
+            return false;
         }
-
-        $request->user()->sendEmailVerificationNotification();
-
-        return back()->with('success', 'Verification link sent!');
     }
 
     /**
@@ -254,4 +342,3 @@ class AuthController extends Controller
             ->with('success', 'You have been logged out successfully.');
     }
 }
-    

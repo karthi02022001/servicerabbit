@@ -2,367 +2,430 @@
 
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
+@section('page-subtitle', 'Welcome back! Here\'s your service overview.')
 
 @section('content')
-<!-- Stats Row -->
-<div class="row g-4 mb-4">
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon primary">
-                <i class="bi bi-people"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ number_format($stats['total_users'] ?? 0) }}</h3>
-                <p>Total Users</p>
-                <div class="stat-change positive">
-                    <i class="bi bi-arrow-up"></i>
-                    <span>12% this month</span>
-                </div>
-            </div>
+<!-- Welcome Banner -->
+<div class="welcome-banner d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <div class="welcome-content">
+        <div class="welcome-label">Welcome Back</div>
+        <h1 class="welcome-title">{{ Auth::guard('admin')->user()->full_name }}</h1>
+        <div class="welcome-date">
+            <i class="bi bi-calendar3"></i>
+            {{ now()->format('l, F d, Y') }}
         </div>
     </div>
-    
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon success">
-                <i class="bi bi-person-badge"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ number_format($stats['total_taskers'] ?? 0) }}</h3>
-                <p>Active Taskers</p>
-                <div class="stat-change positive">
-                    <i class="bi bi-arrow-up"></i>
-                    <span>8% this month</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon info">
-                <i class="bi bi-calendar-check"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ number_format($stats['total_bookings'] ?? 0) }}</h3>
-                <p>Total Bookings</p>
-                <div class="stat-change positive">
-                    <i class="bi bi-arrow-up"></i>
-                    <span>23% this month</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon warning">
-                <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div class="stat-content">
-                <h3>${{ number_format($stats['total_revenue'] ?? 0, 2) }}</h3>
-                <p>Total Revenue</p>
-                <div class="stat-change positive">
-                    <i class="bi bi-arrow-up"></i>
-                    <span>15% this month</span>
-                </div>
-            </div>
-        </div>
+    <div class="welcome-actions mt-3 mt-md-0">
+        @if(Route::has('admin.taskers.pending'))
+        <a href="{{ route('admin.taskers.pending') }}" class="btn btn-light">
+            <i class="bi bi-plus-lg"></i> New Tasker
+        </a>
+        @endif
+        <a href="{{ route('admin.activity-logs.index') }}" class="btn btn-outline-light">
+            <i class="bi bi-activity"></i> Activity Log
+        </a>
     </div>
 </div>
 
-<!-- Second Stats Row -->
+<!-- Stats Cards -->
 <div class="row g-4 mb-4">
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
-            <div class="stat-icon danger">
-                <i class="bi bi-hourglass-split"></i>
+            <div class="stat-card-header">
+                <div class="stat-icon primary">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="stat-change up">
+                    <i class="bi bi-arrow-up"></i> 12%
+                </span>
             </div>
-            <div class="stat-content">
-                <h3>{{ number_format($stats['pending_verifications'] ?? 0) }}</h3>
-                <p>Pending Verifications</p>
+            <div class="stat-value">{{ number_format($stats['total_users'] ?? 0) }}</div>
+            <div class="stat-label">Total Users</div>
+            <div class="stat-progress">
+                <div class="stat-progress-bar primary" style="width: 75%"></div>
+            </div>
+            <div class="stat-footer">
+                <span>Active Users</span>
+                <span>{{ $stats['active_users'] ?? 0 }} Users</span>
             </div>
         </div>
     </div>
     
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
-            <div class="stat-icon purple">
-                <i class="bi bi-clock-history"></i>
+            <div class="stat-card-header">
+                <div class="stat-icon success">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <span class="stat-change up">
+                    <i class="bi bi-arrow-up"></i> 8%
+                </span>
             </div>
-            <div class="stat-content">
-                <h3>{{ number_format($stats['pending_bookings'] ?? 0) }}</h3>
-                <p>Pending Bookings</p>
+            <div class="stat-value">{{ number_format($stats['total_taskers'] ?? 0) }}</div>
+            <div class="stat-label">Active Taskers</div>
+            <div class="stat-progress">
+                <div class="stat-progress-bar success" style="width: 60%"></div>
+            </div>
+            <div class="stat-footer">
+                <span>Verified</span>
+                <span>{{ $stats['verified_taskers'] ?? 0 }} Taskers</span>
             </div>
         </div>
     </div>
     
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
-            <div class="stat-icon success">
-                <i class="bi bi-check-circle"></i>
+            <div class="stat-card-header">
+                <div class="stat-icon info">
+                    <i class="bi bi-calendar-check-fill"></i>
+                </div>
+                <span class="stat-change live">
+                    Live
+                </span>
             </div>
-            <div class="stat-content">
-                <h3>{{ number_format($stats['completed_bookings'] ?? 0) }}</h3>
-                <p>Completed Tasks</p>
+            <div class="stat-value">{{ number_format($stats['total_bookings'] ?? 0) }}</div>
+            <div class="stat-label">Total Bookings</div>
+            <div class="stat-progress">
+                <div class="stat-progress-bar info" style="width: 45%"></div>
+            </div>
+            <div class="stat-footer">
+                <span>In Progress</span>
+                <span>{{ $stats['active_bookings'] ?? 0 }} Bookings</span>
             </div>
         </div>
     </div>
     
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
-            <div class="stat-icon info">
-                <i class="bi bi-wallet2"></i>
-            </div>
-            <div class="stat-content">
-                <h3>${{ number_format($stats['pending_payouts'] ?? 0, 2) }}</h3>
-                <p>Pending Payouts</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4">
-    <!-- Recent Bookings -->
-    <div class="col-12 col-xl-8">
-        <div class="admin-card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Recent Bookings</h5>
-                <a href="{{ route('admin.bookings.index') }}" class="btn btn-sm btn-outline-secondary">
-                    View All
-                </a>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table admin-table">
-                        <thead>
-                            <tr>
-                                <th>Booking ID</th>
-                                <th>Customer</th>
-                                <th>Tasker</th>
-                                <th>Service</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($recentBookings ?? [] as $booking)
-                            <tr>
-                                <td>
-                                    <a href="{{ route('admin.bookings.show', $booking->id) }}" class="fw-medium text-primary">
-                                        #{{ $booking->booking_number }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <div class="user-cell">
-                                        <div class="user-cell-avatar">
-                                            {{ strtoupper(substr($booking->user->first_name ?? 'U', 0, 1)) }}
-                                        </div>
-                                        <div class="user-cell-info">
-                                            <div class="name">{{ $booking->user->first_name ?? '' }} {{ $booking->user->last_name ?? '' }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ $booking->tasker->first_name ?? '' }} {{ $booking->tasker->last_name ?? '' }}</td>
-                                <td>{{ $booking->category->name ?? 'N/A' }}</td>
-                                <td>${{ number_format($booking->total_amount, 2) }}</td>
-                                <td>
-                                    @php
-                                        $statusClasses = [
-                                            'pending' => 'badge-pending',
-                                            'accepted' => 'badge-approved',
-                                            'paid' => 'badge-approved',
-                                            'in_progress' => 'badge-approved',
-                                            'completed' => 'badge-approved',
-                                            'cancelled' => 'badge-rejected',
-                                            'declined' => 'badge-rejected',
-                                            'disputed' => 'badge-pending',
-                                            'refunded' => 'badge-inactive',
-                                        ];
-                                    @endphp
-                                    <span class="badge-status {{ $statusClasses[$booking->status] ?? 'badge-inactive' }}">
-                                        {{ ucfirst(str_replace('_', ' ', $booking->status)) }}
-                                    </span>
-                                </td>
-                                <td>{{ $booking->created_at->format('M d, Y') }}</td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="7" class="text-center py-4 text-muted">
-                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                    No bookings yet
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+            <div class="stat-card-header">
+                <div class="stat-icon warning">
+                    <i class="bi bi-currency-dollar"></i>
                 </div>
+                <span class="stat-change up">
+                    <i class="bi bi-arrow-up"></i> 24%
+                </span>
             </div>
-        </div>
-    </div>
-    
-    <!-- Pending Verifications -->
-    <div class="col-12 col-xl-4">
-        <div class="admin-card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Pending Verifications</h5>
-                <a href="{{ route('admin.taskers.pending') }}" class="btn btn-sm btn-outline-secondary">
-                    View All
-                </a>
+            <div class="stat-value">${{ number_format($stats['total_revenue'] ?? 0, 0) }}</div>
+            <div class="stat-label">Revenue (Month)</div>
+            <div class="stat-progress">
+                <div class="stat-progress-bar warning" style="width: 80%"></div>
             </div>
-            <div class="card-body">
-                @forelse($pendingVerifications ?? [] as $tasker)
-                <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="user-cell-avatar">
-                            {{ strtoupper(substr($tasker->user->first_name ?? 'T', 0, 1)) }}
-                        </div>
-                        <div>
-                            <div class="fw-medium">{{ $tasker->user->first_name ?? '' }} {{ $tasker->user->last_name ?? '' }}</div>
-                            <small class="text-muted">{{ $tasker->created_at->diffForHumans() }}</small>
-                        </div>
-                    </div>
-                    <a href="{{ route('admin.taskers.show', $tasker->id) }}" class="btn btn-sm btn-admin-primary">
-                        Review
-                    </a>
-                </div>
-                @empty
-                <div class="text-center py-4 text-muted">
-                    <i class="bi bi-check-circle fs-1 d-block mb-2"></i>
-                    No pending verifications
-                </div>
-                @endforelse
-            </div>
-        </div>
-        
-        <!-- Recent Users -->
-        <div class="admin-card mt-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">New Users</h5>
-                <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-outline-secondary">
-                    View All
-                </a>
-            </div>
-            <div class="card-body">
-                @forelse($recentUsers ?? [] as $user)
-                <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
-                    <div class="user-cell-avatar">
-                        {{ strtoupper(substr($user->first_name, 0, 1)) }}
-                    </div>
-                    <div class="flex-grow-1">
-                        <div class="fw-medium">{{ $user->first_name }} {{ $user->last_name }}</div>
-                        <small class="text-muted">{{ $user->email }}</small>
-                    </div>
-                    <small class="text-muted">{{ $user->created_at->diffForHumans() }}</small>
-                </div>
-                @empty
-                <div class="text-center py-4 text-muted">
-                    <i class="bi bi-people fs-1 d-block mb-2"></i>
-                    No recent users
-                </div>
-                @endforelse
+            <div class="stat-footer">
+                <span>This Month</span>
+                <span>${{ number_format($stats['revenue_this_month'] ?? 0, 0) }} Earned</span>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Charts Row -->
-<div class="row g-4 mt-2">
-    <div class="col-12 col-xl-8">
-        <div class="admin-card">
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card h-100">
             <div class="card-header">
-                <h5 class="card-title">Revenue Overview</h5>
+                <h5 class="card-title">
+                    <i class="bi bi-graph-up"></i>
+                    Revenue & Booking Trend
+                </h5>
+                <div class="card-header-actions">
+                    <div class="btn-toggle-group">
+                        <button class="btn-toggle" data-period="week">Week</button>
+                        <button class="btn-toggle active" data-period="month">Month</button>
+                        <button class="btn-toggle" data-period="year">Year</button>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
-                <canvas id="revenueChart" height="300"></canvas>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="col-12 col-xl-4">
-        <div class="admin-card">
+    <div class="col-lg-4">
+        <div class="card h-100">
             <div class="card-header">
-                <h5 class="card-title">Booking Status</h5>
+                <h5 class="card-title">
+                    <i class="bi bi-pie-chart"></i>
+                    Booking Status Distribution
+                </h5>
             </div>
-            <div class="card-body">
-                <canvas id="bookingStatusChart" height="300"></canvas>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Bottom Row -->
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ route('admin.roles.index') }}" class="quick-stat">
+                    <div class="quick-stat-icon bg-primary-light">
+                        <i class="bi bi-shield-lock text-primary"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-label">Manage Roles</div>
+                        <div class="quick-stat-value">{{ $stats['total_roles'] ?? 0 }} Roles</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted"></i>
+                </a>
+                
+                <a href="{{ route('admin.admins.index') }}" class="quick-stat">
+                    <div class="quick-stat-icon bg-success-light">
+                        <i class="bi bi-person-gear text-success"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-label">Admin Users</div>
+                        <div class="quick-stat-value">{{ $stats['total_admins'] ?? 0 }} Admins</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted"></i>
+                </a>
+                
+                <div class="quick-stat">
+                    <div class="quick-stat-icon bg-warning-light">
+                        <i class="bi bi-hourglass-split text-warning"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-label">Pending Verifications</div>
+                        <div class="quick-stat-value">{{ $stats['pending_taskers'] ?? 0 }} Taskers</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted"></i>
+                </div>
+                
+                <div class="quick-stat">
+                    <div class="quick-stat-icon bg-danger-light">
+                        <i class="bi bi-exclamation-triangle text-danger"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-label">Pending Reviews</div>
+                        <div class="quick-stat-value">{{ $stats['pending_reviews'] ?? 0 }} Reviews</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="bi bi-activity"></i>
+                    Recent Activity
+                </h5>
+                <a href="{{ route('admin.activity-logs.index') }}" class="btn btn-outline-secondary btn-sm">
+                    View All
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="activity-list">
+                    @forelse($recentActivity ?? [] as $activity)
+                    <div class="activity-item px-4">
+                        <div class="activity-icon bg-{{ $activity->action_badge }}-light">
+                            <i class="bi {{ $activity->action_icon }} text-{{ $activity->action_badge }}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">
+                                <strong>{{ $activity->admin->full_name ?? 'System' }}</strong>
+                                {{ $activity->description }}
+                            </div>
+                            <div class="activity-time">
+                                <i class="bi bi-clock me-1"></i>
+                                {{ $activity->created_at->diffForHumans() }}
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-activity display-4 d-block mb-3"></i>
+                        No recent activity
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Revenue Chart
-const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-new Chart(revenueCtx, {
-    type: 'line',
-    data: {
-        labels: {!! json_encode($chartData['months'] ?? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']) !!},
-        datasets: [{
-            label: 'Revenue',
-            data: {!! json_encode($chartData['revenue'] ?? [0, 0, 0, 0, 0, 0]) !!},
-            borderColor: '#FF6B35',
-            backgroundColor: 'rgba(255, 107, 53, 0.1)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    // Get theme colors based on current theme
+    const getChartColors = () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        return {
+            text: isDark ? '#94a3b8' : '#64748b',
+            grid: isDark ? '#334155' : '#e2e8f0',
+            primary: '#FF6B35',
+            success: '#10B981',
+            warning: '#F59E0B',
+            info: '#3B82F6',
+            danger: '#EF4444'
+        };
+    };
+    
+    let colors = getChartColors();
+    
+    // Revenue Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    label: 'Revenue ($)',
+                    data: [1200, 1900, 1500, 2500, 2200, 3000, 2800, 3500, 4000, 3800, 4200, 5000],
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Bookings',
+                    data: [20, 35, 28, 45, 40, 55, 50, 65, 75, 70, 80, 95],
+                    borderColor: colors.success,
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: '#e9ecef'
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        color: colors.text,
+                        usePointStyle: true,
+                        padding: 20
+                    }
                 }
             },
-            x: {
-                grid: {
-                    display: false
+            scales: {
+                x: {
+                    grid: {
+                        color: colors.grid
+                    },
+                    ticks: {
+                        color: colors.text
+                    }
+                },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    grid: {
+                        color: colors.grid
+                    },
+                    ticks: {
+                        color: colors.text,
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false
+                    },
+                    ticks: {
+                        color: colors.text
+                    }
                 }
             }
         }
-    }
-});
-
-// Booking Status Chart
-const statusCtx = document.getElementById('bookingStatusChart').getContext('2d');
-new Chart(statusCtx, {
-    type: 'doughnut',
-    data: {
-        labels: ['Completed', 'Pending', 'In Progress', 'Cancelled'],
-        datasets: [{
-            data: {!! json_encode($chartData['bookingStatus'] ?? [40, 25, 20, 15]) !!},
-            backgroundColor: [
-                '#10b981',
-                '#f59e0b',
-                '#3b82f6',
-                '#ef4444'
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom'
-            }
+    });
+    
+    // Status Distribution Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    const statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'In Progress', 'Pending', 'Cancelled'],
+            datasets: [{
+                data: [45, 25, 20, 10],
+                backgroundColor: [
+                    colors.success,
+                    colors.info,
+                    colors.warning,
+                    colors.danger
+                ],
+                borderWidth: 0,
+                cutout: '70%'
+            }]
         },
-        cutout: '70%'
-    }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: colors.text,
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                }
+            }
+        }
+    });
+    
+    // Update charts on theme change
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', function() {
+        setTimeout(() => {
+            colors = getChartColors();
+            
+            // Update revenue chart
+            revenueChart.options.plugins.legend.labels.color = colors.text;
+            revenueChart.options.scales.x.grid.color = colors.grid;
+            revenueChart.options.scales.x.ticks.color = colors.text;
+            revenueChart.options.scales.y.grid.color = colors.grid;
+            revenueChart.options.scales.y.ticks.color = colors.text;
+            revenueChart.options.scales.y1.ticks.color = colors.text;
+            revenueChart.update();
+            
+            // Update status chart
+            statusChart.options.plugins.legend.labels.color = colors.text;
+            statusChart.update();
+        }, 100);
+    });
+    
+    // Toggle buttons
+    document.querySelectorAll('.btn-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.parentElement.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            // Here you would update the chart data based on the selected period
+        });
+    });
 });
 </script>
 @endpush
